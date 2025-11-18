@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Viva História</title>
+
+    <!-- MindAR + A-Frame -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.0/dist/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.4/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+      body, html {
+        margin: 0;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      #loading {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: black;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        z-index: 10;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loading">Carregando Viva História...</div>
+
+    <a-scene
+      mindar-image="imageTargetSrc: ./targets/target.mind;"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      embedded
+      renderer="colorManagement: true; physicallyCorrectLights: true;"
+    >
+
+      <a-assets>
+        <!-- A imagem restaurada que aparecerá sobre a foto em preto e branco -->
+        <img id="restaurada" src="./assets/restored.jpg" />
+
+        <!-- Vídeo animado que "dá vida" ao parente (opcional) -->
+        <video id="animacao" src="./assets/anim.mp4" loop preload="auto"></video>
+      </a-assets>
+
+      <!-- Alvo 0 do arquivo .mind -->
+      <a-entity mindar-image-target="targetIndex: 0">
+
+        <!-- IMAGEM RESTAURADA APARECE EM CIMA DA FOTO -->
+        <a-image
+          src="#restaurada"
+          width="1"
+          height="0.7"
+          position="0 0 0"
+        ></a-image>
+
+        <!-- VÍDEO ANIMADO (opcional) -->
+        <a-video
+          src="#animacao"
+          autoplay="false"
+          loop="true"
+          width="1"
+          height="0.7"
+          position="0 -0.8 0"
+          rotation="0 0 0"
+        ></a-video>
+
+      </a-entity>
+
+      <a-camera></a-camera>
+    </a-scene>
+
+    <script>
+      // Remover a tela de loading após 2s
+      window.addEventListener("DOMContentLoaded", () => {
+        const loading = document.querySelector("#loading");
+        setTimeout(() => loading.style.display = "none", 1600);
+
+        // Inicia o vídeo ao tocar na tela (regras dos navegadores mobile)
+        const video = document.querySelector("#animacao");
+        document.body.addEventListener("click", () => video.play());
+      });
+    </script>
+
+  </body>
+</html>
